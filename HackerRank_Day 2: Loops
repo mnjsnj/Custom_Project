@@ -1,0 +1,9 @@
+function vowelsAndConsonants(str) {
+    var vowels = 'aeiou'
+   let sortvowel= str.split('')
+    .map(word => [word, Array.from(word.toLowerCase()).filter(char => vowels.indexOf(        char) > -1 ).length])
+    .sort((_1,  _2) => _1[1] > _2[1]? -1: 1).map(_ => _[0])
+    sortvowel.map(data=>{
+        console.info(data)
+    })
+}

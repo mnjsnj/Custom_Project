@@ -1,0 +1,8 @@
+const factorial=(integer)=>{
+    var final = 1
+      while (integer > 0) {
+          final *= integer
+          integer = integer - 1
+      }
+     return final;
+}

@@ -1,0 +1,12 @@
+function reverseString(s) {
+        try {
+            let splits=s.split('');
+            let reverseArray = splits.reverse(); 
+            let joinarray = reverseArray.join(''); 
+            console.info(joinarray) 
+        }
+        catch(err) {
+         console.info(err.message)
+         console.info(s)
+        }
+}

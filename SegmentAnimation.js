@@ -52,3 +52,15 @@ const LottieViewArea=styled.View`
 `;
 export default SegmentAnimation;
 
+
+
+// Use And Import of comopnet example
+
+
+// <SegmentAnimation
+//        StartSegMent={{First:0,Second:198}} 
+//        EndSegment={{First:225,Second:350}} 
+//        SourcePath={require('./src/assest/1.json')}/>
+
+
+

@@ -2,30 +2,30 @@ import React,{useRef,useEffect,useState} from 'react'
 import { View,Dimensions,ScrollView} from 'react-native'
 import styled from 'styled-components/native';
 import LottieView from 'lottie-react-native';
-
+let offset = 0;
 const App = () => {
 
- 
-    
     const [sliderState, setSliderState] = useState({ currentPage: 0 });
     const { width, height } = Dimensions.get('window');
     
+    const TotelSliderWidthLengt=width*2;
+
+
     const animationone = useRef(null); 
     const animationtwo = useRef(null);
     const animationthree = useRef(null);
 
-    const setSliderPage = (event) => {
-
-      
      
+   
+    const setSliderPage = (event) => {
       
-
-    
- 
-
       const { currentPage } = sliderState;
       const { x } = event.nativeEvent.contentOffset;
       const indexOfNextScreen = Math.floor(x / width);
+      let direction = x >  offset ? 'Right' : 'Left';
+      offset = x;
+      console.info(direction)
+
       if (indexOfNextScreen !== currentPage) {
 
       
@@ -34,7 +34,6 @@ const App = () => {
         if(indexOfNextScreen===0){
           animationtwo.current.play(0,0);
           animationtwo.current.pause();
-
           animationone.current.play(0,122);
         }
 
@@ -71,7 +70,7 @@ const App = () => {
     }, [])
 
     
-
+    const { currentPage } = sliderState;
   
     return (
       <>
@@ -85,7 +84,7 @@ const App = () => {
             showsHorizontalScrollIndicator={false}
             onScroll={(event) => {
               setSliderPage(event);
-            }}
+            }}  
           >
             
             <View style={{ width, height }}>

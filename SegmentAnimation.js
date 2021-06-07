@@ -2,61 +2,76 @@ import React,{useRef,useEffect,useState} from 'react'
 import { View,Dimensions,ScrollView} from 'react-native'
 import styled from 'styled-components/native';
 import LottieView from 'lottie-react-native';
-const ScrollViewer = () => {
+
+const App = () => {
+
+ 
+    
     const [sliderState, setSliderState] = useState({ currentPage: 0 });
     const { width, height } = Dimensions.get('window');
-
-    const [LoopAnimationone, setLoopAnimationone] = useState(false);
-    const [LoopAnimationtwo, setLoopAnimationtwo] = useState(false)
     
-    
-
-    const animationone = useRef(null);
+    const animationone = useRef(null); 
     const animationtwo = useRef(null);
     const animationthree = useRef(null);
 
     const setSliderPage = (event) => {
+
+      
+     
+      
+
+    
+ 
+
       const { currentPage } = sliderState;
       const { x } = event.nativeEvent.contentOffset;
       const indexOfNextScreen = Math.floor(x / width);
       if (indexOfNextScreen !== currentPage) {
 
-        setSliderState({
-          ...sliderState,
-          currentPage: indexOfNextScreen,
-        })
+      
+
 
         if(indexOfNextScreen===0){
-          animationtwo.current.reset();
-          animationthree.current.reset();
-          animationone.current.play(0,198);
+          animationtwo.current.play(0,0);
+          animationtwo.current.pause();
+
+          animationone.current.play(0,122);
         }
 
         if(indexOfNextScreen===1){
-          animationtwo.current.play(0,150);
-          animationone.current.reset();
-          animationthree.current.reset();
+          animationone.current.play(0,0);
+          animationone.current.pause();
+
+          animationthree.current.play(0,0);
+          animationthree.current.pause();
+
+          animationtwo.current.play(0,36);
         }
 
         if(indexOfNextScreen===2){
-          animationthree.current.play(0,140);
-          animationone.current.reset();
-          animationtwo.current.reset();
-        }
-         
+          animationtwo.current.play(0,0);
+          animationtwo.current.pause();
+
+          animationthree.current.play(0,47);
+       }
+
+       setSliderState({
+        ...sliderState,
+        currentPage: indexOfNextScreen,
+      })
+          
       }
     }
 
-     
-    
+      
     useEffect(() => {
-      animationone.current.play(0,198);
       animationtwo.current.pause();
       animationthree.current.pause();
+      animationone.current.play(0,122);
     }, [])
 
     
-    const { currentPage } = sliderState;
+
   
     return (
       <>
@@ -77,13 +92,12 @@ const ScrollViewer = () => {
             
                 <LottieViewArea> 
                         <LottieView   
-                        ref={animationone}  
-                        loop={LoopAnimationone}
-                        onAnimationFinish={()=>{ 
-                          //  setLoopAnimationone(true)
-                          //  animationone.current.play(198,350);
+                        ref={animationone}
+                        loop={false}
+                        onAnimationFinish={()=>{
+                          animationone.current.play(123,367);
                         }} 
-                        source={require('../assest/1.json')}
+                        source={require('./src/assest/1.json')}
                     />   
                 </LottieViewArea> 
            
@@ -93,12 +107,12 @@ const ScrollViewer = () => {
           
                 <LottieViewArea> 
                         <LottieView   
-                        ref={animationtwo} 
                         loop={false}
+                        ref={animationtwo} 
                         onAnimationFinish={()=>{
-                         
-                        }}
-                        source={require('../assest/2.json')}
+                          animationtwo.current.play(37,160);
+                        }} 
+                        source={require('./src/assest/2.json')}
                     />   
                 </LottieViewArea> 
          
@@ -108,17 +122,17 @@ const ScrollViewer = () => {
             <View style={{ width, height }}>
           
           <LottieViewArea> 
-                  <LottieView   
+                  <LottieView    
                   ref={animationthree} 
                   loop={false}
-                  onAnimationFinish={()=>{
-                   
-                  }}
-                  source={require('../assest/3.json')}
-              />   
-          </LottieViewArea> 
-   
-      </View>
+                  onAnimationFinish={()=>{  
+                    animationthree.current.play(48,136);
+                  }} 
+                   source={require('./src/assest/3.json')}
+                  />   
+              </LottieViewArea> 
+      
+          </View>
 
 
             
@@ -139,6 +153,5 @@ const LottieViewArea=styled.View`
    justify-content:center;
 `;
 
-  export default ScrollViewer;
-
+  export default App;
 

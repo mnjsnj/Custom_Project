@@ -11,51 +11,89 @@ let progressthree=new Animated.Value(0);
 const App = () => {
 
   const { width, height } = Dimensions.get('window');
-   const Animationone = useRef(null);
-   const Animationtwo = useRef(null);
-   const Animationthree = useRef(null);
-   
-   
+  const [Check, setCheck] = useState(false)
+
+  const StartAnimationoneLoop=()=>{
+    Animated.loop(
+        Animated.timing(progressone, {
+          toValue: 0.94,
+          duration: 4000,
+          useNativeDriver:true
+        }),
+      { 
+        iterations: -1
+      }
+    ).start()
+  }
+
+  const StartAnimationtwoLoop=()=>{
+    Animated.loop(
+        Animated.timing(progresstwo, {
+          toValue: Check?0.11:0.75,
+          duration: 4000,  
+          useNativeDriver:true
+        }),
+      {
+        iterations: -1
+      }
+    ).start() 
+  }
+  const StartAnimationthreeLoop=()=>{
+    Animated.loop(
+        Animated.timing(progressthree, {
+          toValue: 0.75,
+          duration: 4000,
+          useNativeDriver:true
+        }),
+      {
+        iterations: -1
+      }
+    ).start()
+  }
 
    const CallOnChnageIndex=(index)=>{
     
     switch (index) { 
       case 0:
-        progresstwo.setValue(0)
-        Animated.timing(progressone, {
-           toValue: .51,
-           duration: 5000,
-           useNativeDriver:true
-        }).start(({finished}) => {
-            if(finished){
-              Animationone.current.play(123,357)
-            }
-        });
+        setCheck(false)
+        progresstwo.setValue(0.14) 
+        Animated.timing(progressone, {  
+          toValue: 0.36,
+          duration: 3000,  
+          useNativeDriver:true
+       }).start(({finished})=>{
+           if(finished===true){
+            StartAnimationoneLoop()
+           }
+       }) 
       return false;
       case 1: 
+        setCheck(false)
          progressone.setValue(0)
          progressthree.setValue(0)
-         Animated.timing(progresstwo, {
-          toValue: .51,
-          duration: 5000,
+         Animated.timing(progresstwo, {  
+          toValue:Check?0.086:0.31,
+          duration: 2500,   
           useNativeDriver:true
-       }).start(({finished}) => {
-        if(finished){
-          Animationtwo.current.play(37,160)
-        } 
+       })
+       .start(({finished})=>{
+        if(finished===true){
+          StartAnimationtwoLoop()
+        }
        })
         return false; 
       case 2: 
       progresstwo.setValue(0)
+      setCheck(true)
       Animated.timing(progressthree, {
-         toValue: .51,
-         duration: 5000,
-         useNativeDriver:true
-      }).start(({finished}) => {
-        if(finished){
-          Animationthree.current.play(48,136);
-        } 
-       });
+        toValue:0.51,
+         duration: 4000,
+         useNativeDriver:true 
+      }).start(({finished})=>{ 
+        if(finished===true){
+          StartAnimationthreeLoop()
+        }
+       })
         return false;
     }
    }
@@ -71,7 +109,6 @@ const App = () => {
         <SlideView style={{ width, height }}>
            <LottieViewArea>
               <LottieView
-                  ref={Animationone}
                   progress={progressone}
                   source={require('./src/assest/1.json')}
               />
@@ -81,7 +118,6 @@ const App = () => {
         <SlideView style={{ width, height }}>
         <LottieViewArea>
           <LottieView
-            ref={Animationtwo}
             progress={progresstwo}
             source={require('./src/assest/2.json')}
           />
@@ -91,7 +127,6 @@ const App = () => {
         <SlideView style={{ width, height }}>
         <LottieViewArea> 
           <LottieView
-           ref={Animationthree}
            progress={progressthree}
            source={require('./src/assest/3.json')}
            

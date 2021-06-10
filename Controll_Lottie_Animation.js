@@ -1,7 +1,7 @@
-import React,{useRef,useState} from 'react';
+import React,{useState} from 'react';
 import PagerView from 'react-native-pager-view';
 import styled from 'styled-components/native';
-import { Dimensions,Animated } from 'react-native';
+import { Animated,Easing} from 'react-native';
 import LottieView from 'lottie-react-native';
 
 let progressone=new Animated.Value(0);
@@ -10,27 +10,30 @@ let progressthree=new Animated.Value(0);
 
 const App = () => {
 
-  const { width, height } = Dimensions.get('window');
-  const [Check, setCheck] = useState(false)
+
+  const [Check, setCheck] = useState(false);
+  const [offsetvalue, setOffset] = useState(0);
+  const [EnableScroll, setEnableScroll] = useState(false);
 
   const StartAnimationoneLoop=()=>{
     Animated.loop(
         Animated.timing(progressone, {
           toValue: 0.94,
-          duration: 4000,
+          duration: 5000, 
           useNativeDriver:true
-        }),
+        }), 
       { 
-        iterations: -1
+        iterations: -1 
       }
     ).start()
+    setEnableScroll(true)
   }
 
   const StartAnimationtwoLoop=()=>{
     Animated.loop(
         Animated.timing(progresstwo, {
-          toValue: Check?0.11:0.75,
-          duration: 4000,  
+          toValue: 0.76,
+          duration: 3000,  
           useNativeDriver:true
         }),
       {
@@ -38,6 +41,7 @@ const App = () => {
       }
     ).start() 
   }
+
   const StartAnimationthreeLoop=()=>{
     Animated.loop(
         Animated.timing(progressthree, {
@@ -51,41 +55,65 @@ const App = () => {
     ).start()
   }
 
+  const MoveWelcomeTozozo=(event)=>{
+       const {offset} = event.nativeEvent;
+       if (offset < 0) {
+         return;
+       }
+    
+       if(EnableScroll){
+           let offSetvalue = 0.95 + offset/10;
+           setOffset(offSetvalue)
+           if(offset===0){
+            setOffset(0)
+            progressone.setValue(0)
+            FirstAnimation();
+           }
+       } 
+  }
+
+  const FirstAnimation =()=>{
+    setCheck(false)
+    progresstwo.setValue(0) 
+    Animated.timing(progressone, {  
+      toValue: 0.36,
+      duration: 4000,    
+      useNativeDriver:true
+   }).start(({finished})=>{
+       if(finished===true){ 
+          StartAnimationoneLoop()
+       }
+   })
+  }
+
    const CallOnChnageIndex=(index)=>{
     
     switch (index) { 
       case 0:
-        setCheck(false)
-        progresstwo.setValue(0.14) 
-        Animated.timing(progressone, {  
-          toValue: 0.36,
-          duration: 3000,  
-          useNativeDriver:true
-       }).start(({finished})=>{
-           if(finished===true){
-            StartAnimationoneLoop()
-           }
-       }) 
+        FirstAnimation();
       return false;
       case 1: 
         setCheck(false)
          progressone.setValue(0)
          progressthree.setValue(0)
          Animated.timing(progresstwo, {  
-          toValue:Check?0.086:0.31,
-          duration: 2500,   
-          useNativeDriver:true
+          toValue:Check?0.30:0.125,
+          duration: 3500,   
+          useNativeDriver:true 
        })
        .start(({finished})=>{
         if(finished===true){
+          if(Check===false){
+            progresstwo.setValue(0.30) 
+          }
           StartAnimationtwoLoop()
         }
        })
-        return false; 
+        return false;  
       case 2: 
-      progresstwo.setValue(0)
+      progresstwo.setValue(0.14) 
       setCheck(true)
-      Animated.timing(progressthree, {
+      Animated.timing(progressthree, { 
         toValue:0.51,
          duration: 4000,
          useNativeDriver:true 
@@ -98,33 +126,40 @@ const App = () => {
     }
    }
 
-  return ( 
-    <PagerView style={{flex:1}} 
-       onPageSelected={event => {
-        const page = event.nativeEvent.position;
-        CallOnChnageIndex(page)
-       }}
-       >
+  
+   
 
-        <SlideView style={{ width, height }}>
+  return ( 
+    //for android or ios margin issue we can use background image RN componet here
+  <SafeView>
+        <PagerView style={{flex:1}} 
+        onPageScroll={event => {
+             MoveWelcomeTozozo(event)
+        }}
+          onPageSelected={event => {
+            const page = event.nativeEvent.position;
+            CallOnChnageIndex(page)
+            setOffset(0)
+            setEnableScroll(false)
+          }}
+          >
            <LottieViewArea>
               <LottieView
-                  progress={progressone}
+                  progress={offsetvalue===0?progressone:offsetvalue}
                   source={require('./src/assest/1.json')}
               />
             </LottieViewArea>
-        </SlideView>   
         
-        <SlideView style={{ width, height }}>
+     
         <LottieViewArea>
           <LottieView
             progress={progresstwo}
             source={require('./src/assest/2.json')}
           />
           </LottieViewArea>
-        </SlideView> 
+       
       
-        <SlideView style={{ width, height }}>
+       
         <LottieViewArea> 
           <LottieView
            progress={progressthree}
@@ -132,20 +167,20 @@ const App = () => {
            
           />
           </LottieViewArea>
-        </SlideView> 
-</PagerView>
-     
+       
+        </PagerView>
+  </SafeView>
   )
 }
     
 const LottieViewArea=styled.View` 
-   align-items:center;
    height:100%;
    width:100%;
-   justify-content:center;
 `;
 
-const SlideView=styled.View``;
+const SafeView=styled.View`
+  flex:1;
+`;
 
 export default App;
     

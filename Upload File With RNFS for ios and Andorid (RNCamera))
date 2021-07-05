@@ -1,0 +1,20 @@
+const realPath = Platform.OS === 'ios' ? data.uri.replace('file://', '') : data.uri;
+ const Filedata = [
+    {
+       name: 'file',
+       filename : 'avatar.png',
+       type:'image/png',
+       data: RNFetchBlob.wrap(decodeURIComponent(realPath)),
+    },
+    {name: 'bla', data: 'bla'}
+  ]
+  RNFetchBlob.fetch('POST', GLOBALS.BASE_URL + 'User/UploadImage', {
+    Authorization : 'Bearer ' + store.response.token.token + '',
+    'Content-Type' : 'multipart/form-data',
+  },
+  Filedata
+  ).then((resp) => {
+   console.info(resp)
+  }).catch((err) => {
+    console.info(err)
+  })
